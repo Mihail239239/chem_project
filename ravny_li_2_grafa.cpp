@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-
+#define int short
 using namespace std;
 
 template<typename T> void vyvesti_vector(vector<T> a){
@@ -13,7 +13,7 @@ template<typename T> void wyvesti_vector(vector<T> a){
         vyvesti_vector(a[i]);
     }
 }
-vector<vector<int>> case_1d (vector<int> a,vector<int> b){
+ inline vector<vector<int>> case_1d (vector<int> a,vector<int> b){
     if(a.size()!=b.size()) return {{-3}};
     int summa1 = 0, summa2 = 0;
     for(int i = 0; i < a.size(); ++i){
@@ -56,7 +56,7 @@ vector<vector<int>> case_1d (vector<int> a,vector<int> b){
     return otvet;
 }
 const int ogranichenie_na_stepen = 4;
-vector<vector<int>> genocid_nulej (vector<vector<int>> a){
+ inline vector<vector<int>> genocid_nulej (vector<vector<int>> a){
     vector<vector<int>> otvet(a.size());
     for(int i = 0; i < a.size(); ++i){
         for(int j = 0; j < a[0].size(); ++j){
@@ -70,7 +70,7 @@ vector<vector<int>> genocid_nulej (vector<vector<int>> a){
     }
     return otvet;
 }
-vector<int> peresechenie (vector<int> a, vector<int> b){
+ inline vector<int> peresechenie (vector<int> a, vector<int> b){
     vector<int> otvet;
     set<int> elementib;
     for(int i = 0; i < b.size();++i){
@@ -81,7 +81,7 @@ vector<int> peresechenie (vector<int> a, vector<int> b){
     }
     return otvet;
 }
-vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>> u, vector<vector<int>> v){
+ inline vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>>& u, vector<vector<int>>& v){
     vector<vector<int>> otvet (u.size(), vector<int>(1,0));
     vector<vector<int>> a = genocid_nulej(u);
     vector<vector<int>> b = genocid_nulej(v);
@@ -175,7 +175,7 @@ vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>> u, vector<vec
     return otvet;
 }
 //rebra v formate vectora iz 3 chisel: ver1, ver2, ves
-vector<vector<int>> rebra_v_tablicu (int kol_vo_ver, vector<vector<int>> rebra){
+ inline vector<vector<int>> rebra_v_tablicu (int kol_vo_ver, vector<vector<int>>& rebra){
     vector<vector<int>> otvet (kol_vo_ver, vector<int> (kol_vo_ver,0));
     for(int i = 0; i < rebra.size(); ++i){
         otvet[rebra[i][0]][rebra[i][1]]+=rebra[i][2];
@@ -183,7 +183,7 @@ vector<vector<int>> rebra_v_tablicu (int kol_vo_ver, vector<vector<int>> rebra){
     }
     return otvet;
 }
-bool ravny (vector<vector<int>> a, vector<vector<int>> b){
+inline  bool ravny (vector<vector<int>>& a, vector<vector<int>>& b){
     for(int i = 0; i < a.size(); ++i){
         for(int j = 0; j < a[0].size(); ++j){
             if(a[i][j] != b[i][j]) return false;
@@ -191,7 +191,7 @@ bool ravny (vector<vector<int>> a, vector<vector<int>> b){
     }
     return true;
 }
-bool podstavit (vector<int> parosochetanie, vector<vector<int>> a, vector<vector<int>> b){
+ inline bool podstavit (vector<int>& parosochetanie, vector<vector<int>>& a, vector<vector<int>>& b){
     //parosochetanie[i] = j <=> i ver iz a sopostavlena j ver iz b
     vector<vector<int>> c (b.size());
     for(int i = 0; i < b.size(); ++i){
@@ -202,7 +202,7 @@ bool podstavit (vector<int> parosochetanie, vector<vector<int>> a, vector<vector
 const int ogranichenie_na_kolvo_vershin = 50;
 vector<int> match(ogranichenie_na_kolvo_vershin,-1);
 vector<bool>used(ogranichenie_na_kolvo_vershin);
-bool dfs(vector<vector<int>>& g, int v){
+ inline bool dfs(vector<vector<int>>& g, int v){
     if(used[v]){return false;}
     used[v] = true;
     for(int u:g[v]){
@@ -213,7 +213,7 @@ bool dfs(vector<vector<int>>& g, int v){
     }
     return false;
 }
-vector<int> max_parosochetanie (vector<vector<int>> g, int n){
+  inline vector<int> max_parosochetanie (vector<vector<int>>& g, int n){
     for(int v = 0;  v < n; ++v){
         fill(used.begin(),used.end(),false);
         bool t = dfs(g,v);
@@ -226,7 +226,7 @@ vector<int> max_parosochetanie (vector<vector<int>> g, int n){
     return ans;
 }
 vector<vector<int>> vse_parosoch;
-void all_parosoch (vector<vector<int>>& rebra, vector<int>& ans, vector<int>& usedb, int k){
+ inline void all_parosoch (vector<vector<int>>& rebra, vector<int>& ans, vector<int>& usedb, int k){
     int n = usedb.size();
     if(k==n) {vse_parosoch.push_back(ans); return;}
     int i = k;
