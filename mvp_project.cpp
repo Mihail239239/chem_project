@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-//bu
+
 using namespace std;
 
 
