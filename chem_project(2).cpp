@@ -645,7 +645,7 @@ int kolvo_elementa_funktcia(string veshestvo, int nomer_element)
         kolvo*=stoi(kolvo_elementa_string);
         kolvo_elementa_string="";
     }
-    int kolvo_skobok=0;
+    int kolvo_skobok=0, kolvo_skobok2=0;
     for(int i=nomer_element; i<veshestvo.size(); ++i)
     {
         if(veshestvo[i]=='(')
@@ -653,6 +653,33 @@ int kolvo_elementa_funktcia(string veshestvo, int nomer_element)
             ++kolvo_skobok;
         }
         if(veshestvo[i]==')')
+        {
+            if(kolvo_skobok>0)
+            {
+                --kolvo_skobok;
+            }
+            else
+            {
+                if(veshestvo[i+1]>='0' && veshestvo[i+1]<='9')
+                {
+                    ++i;
+                    for(i; i<veshestvo.size() && (veshestvo[i]>='0' && veshestvo[i]<='9'); ++i)
+                    {
+                        kolvo_elementa_string.push_back(veshestvo[i]);
+                    }
+                    if(kolvo_elementa_string!="")
+                    {
+                        kolvo*=stoi(kolvo_elementa_string);
+                        kolvo_elementa_string="";
+                    }
+                }
+            }
+        }
+        if(veshestvo[i]=='[')
+        {
+            ++kolvo_skobok;
+        }
+        if(veshestvo[i]==']')
         {
             if(kolvo_skobok>0)
             {
@@ -855,7 +882,7 @@ signed main()
     {
         if(proverka(reagenty.second[i])!="верно")
         {
-            cout <<reagenty.second[i] << "- это не из химии!";
+            cout <<reagenty.second[i] << proverka(reagenty.second[i]);
             return 0;
         }
     }
