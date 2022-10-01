@@ -309,19 +309,22 @@ bool issv (vector<vector<int>>& graph){
     return true;
 }
 void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector<int>>& now, int i, int j, int& chislo_reber_postr){
+    wyvesti_vector(now);
     if(j==i){
         i++;
         j=0;
     }
     if(i==kol_vo_ver-1 && j == i-1){
 
-        if(kol_vo_reb-chislo_reber_postr > ogr_na_kr) {return;}
+        if(kol_vo_reb-chislo_reber_postr > ogr_na_kr) {//cout << 0;
+        return;}
         else{
             now[i][j] = kol_vo_reb-chislo_reber_postr;
             now[j][i] = kol_vo_reb-chislo_reber_postr;
             chislo_reber_postr = kol_vo_reb;
         }
-        if(!issv(now)) {return;}
+        if(!issv(now)) {//cout << 1;
+        return;}
 
         auto it = vse_graphy.begin();
 
@@ -333,6 +336,7 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
         vse_graphy.insert(now);
     }
     else if(i==kol_vo_ver){
+        cout << 99;
         if(!issv(now)) {return;}
 
         auto it = vse_graphy.begin();
@@ -353,12 +357,15 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
             for(int q = 0; q < i; ++q){
                 sum_v_stl +=now[q][j];
             }
-            if(sum_v_str+t > ogranichenie_na_stepen || sum_v_stl+t > ogranichenie_na_stepen) {break;}
+            if(sum_v_str+t > ogranichenie_na_stepen || sum_v_stl+t > ogranichenie_na_stepen || chislo_reber_postr+t > kol_vo_reb) {cout << 2;
+            break;}
             now[i][j] = t;
             now[j][i] = t;
             chislo_reber_postr+=t;
             j++;
+            wyvesti_vector(now);
             postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,i,j,chislo_reber_postr);
+            cout << 44;
             now[i][j] = 0;
             now[j][i] = 0;
             chislo_reber_postr-=t;
