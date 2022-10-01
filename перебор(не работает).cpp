@@ -313,7 +313,7 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
         j=0;
     }
     if(i==kol_vo_ver-1 && j == i-1){
-        if(kol_vo_reb-chislo_reber_postr > ogr_na_kr) {cout << 0; return;}
+        if(kol_vo_reb-chislo_reber_postr > ogr_na_kr) {return;}
         else{
             now[i][j] = kol_vo_reb-chislo_reber_postr;
             now[j][i] = kol_vo_reb-chislo_reber_postr;
@@ -321,7 +321,7 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
         }
     }
     else if(i==kol_vo_ver){
-        if(!issv(now)) {cout << 1;return;}
+        if(!issv(now)) {return;}
         set<vector<vector<int>>> :: iterator it = vse_graphy.begin();
         while(it!=vse_graphy.end()){
             if(iseq(now,*it)) return;
@@ -339,7 +339,7 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
             for(int q = 0; q < i; ++q){
                 sum_v_stl +=now[q][j];
             }
-            if(sum_v_str+t > ogranichenie_na_stepen || sum_v_stl+t > ogranichenie_na_stepen) {cout << 2;break;}
+            if(sum_v_str+t > ogranichenie_na_stepen || sum_v_stl+t > ogranichenie_na_stepen) {break;}
             now[i][j] = t;
             now[j][i] = t;
             chislo_reber_postr+=t;
