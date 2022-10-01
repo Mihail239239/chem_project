@@ -4,16 +4,16 @@ using namespace std;
 
 template<typename T> void vyvesti_vector(vector<T> a){
     for(int i = 0; i < a.size(); ++i){
-        cout << a[i] << " ";
+        cout<< a[i] << " ";
     }
-    cout << '\n';
+    cout<< '\n';
 }
 template<typename T> void wyvesti_vector(vector<T> a){
     for(int i = 0; i < a.size(); ++i){
         vyvesti_vector(a[i]);
     }
 }
- inline vector<vector<int>> case_1d (vector<int> a,vector<int> b){
+   vector<vector<int>> case_1d (vector<int>& a,vector<int>& b){
     if(a.size()!=b.size()) return {{-3}};
     int summa1 = 0, summa2 = 0;
     for(int i = 0; i < a.size(); ++i){
@@ -56,7 +56,7 @@ template<typename T> void wyvesti_vector(vector<T> a){
     return otvet;
 }
 const int ogranichenie_na_stepen = 4;
- inline vector<vector<int>> genocid_nulej (vector<vector<int>> a){
+   vector<vector<int>> genocid_nulej (vector<vector<int>>& a){
     vector<vector<int>> otvet(a.size());
     for(int i = 0; i < a.size(); ++i){
         for(int j = 0; j < a[0].size(); ++j){
@@ -70,7 +70,7 @@ const int ogranichenie_na_stepen = 4;
     }
     return otvet;
 }
- inline vector<int> peresechenie (vector<int> a, vector<int> b){
+   vector<int> peresechenie (vector<int>& a, vector<int>& b){
     vector<int> otvet;
     set<int> elementib;
     for(int i = 0; i < b.size();++i){
@@ -81,7 +81,7 @@ const int ogranichenie_na_stepen = 4;
     }
     return otvet;
 }
- inline vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>>& u, vector<vector<int>>& v){
+   vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>>& u, vector<vector<int>>& v){
     vector<vector<int>> otvet (u.size(), vector<int>(1,0));
     vector<vector<int>> a = genocid_nulej(u);
     vector<vector<int>> b = genocid_nulej(v);
@@ -175,7 +175,7 @@ const int ogranichenie_na_stepen = 4;
     return otvet;
 }
 //rebra v formate vectora iz 3 chisel: ver1, ver2, ves
- inline vector<vector<int>> rebra_v_tablicu (int kol_vo_ver, vector<vector<int>>& rebra){
+   vector<vector<int>> rebra_v_tablicu (int kol_vo_ver, vector<vector<int>>& rebra){
     vector<vector<int>> otvet (kol_vo_ver, vector<int> (kol_vo_ver,0));
     for(int i = 0; i < rebra.size(); ++i){
         otvet[rebra[i][0]][rebra[i][1]]+=rebra[i][2];
@@ -183,26 +183,23 @@ const int ogranichenie_na_stepen = 4;
     }
     return otvet;
 }
-inline  bool ravny (vector<vector<int>>& a, vector<vector<int>>& b){
-    for(int i = 0; i < a.size(); ++i){
-        for(int j = 0; j < a[0].size(); ++j){
-            if(a[i][j] != b[i][j]) return false;
+   bool podstavit (vector<int> parosochetanie, vector<vector<int>>& a, vector<vector<int>>& b){
+    //parosochetanie[i] = j <=> i ver iz a sopostavlena j ver iz b
+    for(int i = 0; i < b.size(); ++i){
+        for(int t=0; t<b.size(); ++t)
+        {
+            if(a[i][t]!=b[parosochetanie[i]][parosochetanie[t]])
+            {
+                return false;
+            }
         }
     }
     return true;
 }
- inline bool podstavit (vector<int>& parosochetanie, vector<vector<int>>& a, vector<vector<int>>& b){
-    //parosochetanie[i] = j <=> i ver iz a sopostavlena j ver iz b
-    vector<vector<int>> c (b.size());
-    for(int i = 0; i < b.size(); ++i){
-        c[i] = b[parosochetanie[i]];
-    }
-    return ravny(a,c);
-}
 const int ogranichenie_na_kolvo_vershin = 50;
 vector<int> match(ogranichenie_na_kolvo_vershin,-1);
 vector<bool>used(ogranichenie_na_kolvo_vershin);
- inline bool dfs(vector<vector<int>>& g, int v){
+   bool dfs(vector<vector<int>>& g, int v){
     if(used[v]){return false;}
     used[v] = true;
     for(int u:g[v]){
@@ -213,7 +210,7 @@ vector<bool>used(ogranichenie_na_kolvo_vershin);
     }
     return false;
 }
-  inline vector<int> max_parosochetanie (vector<vector<int>>& g, int n){
+    vector<int> max_parosochetanie (vector<vector<int>>& g, int n){
     for(int v = 0;  v < n; ++v){
         fill(used.begin(),used.end(),false);
         bool t = dfs(g,v);
@@ -226,7 +223,7 @@ vector<bool>used(ogranichenie_na_kolvo_vershin);
     return ans;
 }
 vector<vector<int>> vse_parosoch;
- inline void all_parosoch (vector<vector<int>>& rebra, vector<int>& ans, vector<int>& usedb, int k){
+   void all_parosoch (vector<vector<int>>& rebra, vector<int>& ans, vector<int>& usedb, int k){
     int n = usedb.size();
     if(k==n) {vse_parosoch.push_back(ans); return;}
     int i = k;
@@ -245,49 +242,49 @@ vector<vector<int>> vse_parosoch;
             return;
 
 }
- inline bool iseq (vector<vector<int>>& a, vector<vector<int>> b){
+  bool iseq (vector<vector<int>>& a, vector<vector<int>> b){
     int n = a.size();
     vector<vector<int>> c = otseivanie_teoremoj_vieta(a,b);
     switch(c[0][0]){
     case -6:
-        //cout << "Code -6: sizes are not equal";
+        ////cout<< "Code -6: sizes are not equal";
         return 0;
     case -5:
-        //cout << "Code -5: sums are not equal" << '\n';
+        //cout<< "Code -5: sums are not equal" << '\n';
         return 0;
     case -4:
-        //cout << "Code -4: sigma2s are not equal";
+        ////cout<< "Code -4: sigma2s are not equal";
         return 0;
     case -3:
-        //cout << "Code -3: sigma3s are not equal";
+        ////cout<< "Code -3: sigma3s are not equal";
         return 0;
     case -2:
-        //cout << "Code -2: multiples are not equal";
+        ////cout<< "Code -2: multiples are not equal";
         return 0;
     default:
         vector<int> tmp = max_parosochetanie(c,n);
         if(tmp[0] == -1){
-            //cout << "Code -7: max_parosochetanie does not include all ver";
+            //cout<< "Code -7: max_parosochetanie does not include all ver";
 
-            return 0;
+            return false;
         }
         if(podstavit(tmp,a,b)){
-            vyvesti_vector(tmp);
-            return 1;
+            //vyvesti_vector(tmp);
+            return true;
         }
         vector<int> ans(n,-1);
         vector<int> usedb (n,0);
         all_parosoch(c,ans,usedb,0);
         for(int i = 0; i < vse_parosoch.size(); ++i){
             if(podstavit(vse_parosoch[i],a,b)){
-                vyvesti_vector(vse_parosoch[i]);
+                //vyvesti_vector(vse_parosoch[i]);
 
-                return 1;
+                return true;
             }
         }
-        //cout << "Code -1: these two vectors are not equal without any obvious reason" << '\n';
+        //cout<< "Code -1: these two vectors are not equal without any obvious reason" << '\n';
 
-        return 0;
+        return false;
     }
     return 0;
 }
@@ -308,24 +305,32 @@ bool issv (vector<vector<int>>& graph){
     }
     return true;
 }
-void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector<int>>& now, int i, int j, int& chislo_reber_postr){
-    wyvesti_vector(now);
+
+int kolvo_variantov=0;
+
+void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector<int>>& now, int i, int j, int chislo_reber_postr){
+    //cout<< "sdfgh" << '\n';
+    //wyvesti_vector(now);
+    //cout<< "dfghj" << '\n';
     if(j==i){
         i++;
         j=0;
     }
     if(i==kol_vo_ver-1 && j == i-1){
-
-        if(kol_vo_reb-chislo_reber_postr > ogr_na_kr) {//cout << 0;
+            ++kolvo_variantov;
+    //cout<< "@" << " " << chislo_reber_postr << " " << ogr_na_kr << '\n';
+        if(kol_vo_reb-chislo_reber_postr > ogr_na_kr) {////cout<< 0;
         return;}
         else{
             now[i][j] = kol_vo_reb-chislo_reber_postr;
             now[j][i] = kol_vo_reb-chislo_reber_postr;
             chislo_reber_postr = kol_vo_reb;
         }
-        if(!issv(now)) {//cout << 1;
+        if(!issv(now)) {////cout<< "osibka" << '\n'; //wyvesti_vector(now); //cout<< '\n' << "kones osibki";
         return;}
-
+        ////cout<< '\n';
+        ////wyvesti_vector(now);
+        ////cout<< '\n';
         auto it = vse_graphy.begin();
 
         while(it!=vse_graphy.end()){
@@ -335,20 +340,10 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
         }
         vse_graphy.insert(now);
     }
-    else if(i==kol_vo_ver){
-        cout << 99;
-        if(!issv(now)) {return;}
-
-        auto it = vse_graphy.begin();
-
-        while(it!=vse_graphy.end()){
-            if(iseq(now,*it)) return;
-            it++;
-        }
-        vse_graphy.insert(now);
-    }
     else {
-        for(int t = 0; t < ogr_na_kr; ++t){
+        for(int t = 0; t <= ogr_na_kr; ++t){
+            ////cout<< "!" << t << "!";
+            ++kolvo_variantov;
             int sum_v_str = 0;
             int sum_v_stl = 0;
             for(int q = 0; q < j; ++q){
@@ -357,15 +352,15 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
             for(int q = 0; q < i; ++q){
                 sum_v_stl +=now[q][j];
             }
-            if(sum_v_str+t > ogranichenie_na_stepen || sum_v_stl+t > ogranichenie_na_stepen || chislo_reber_postr+t > kol_vo_reb) {cout << 2;
+            if((sum_v_str+t > ogranichenie_na_stepen || sum_v_stl+t > ogranichenie_na_stepen) || chislo_reber_postr+t > kol_vo_reb) {//cout<< "!001!"; //cout<< '\n'; //wyvesti_vector(now);
             break;}
             now[i][j] = t;
             now[j][i] = t;
             chislo_reber_postr+=t;
             j++;
-            wyvesti_vector(now);
+            ////wyvesti_vector(now);
             postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,i,j,chislo_reber_postr);
-            cout << 44;
+            ////cout<< "@";
             now[i][j] = 0;
             now[j][i] = 0;
             chislo_reber_postr-=t;
@@ -375,15 +370,18 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
 }
 signed main()
 {
-    int kol_vo_reb,kol_vo_ver,ogr_na_kr;
+   int kol_vo_reb,kol_vo_ver,ogr_na_kr;
     cin >> kol_vo_reb >> kol_vo_ver >> ogr_na_kr;
     int nol = 0;
     vector<vector<int>> now(kol_vo_ver,vector<int>(kol_vo_ver,0));
     postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,0,0,nol);
-    cout << vse_graphy.size() << endl;
+    cout<< vse_graphy.size() << endl;
     set<vector<vector<int>>> :: iterator it = vse_graphy.begin();
         while(it!=vse_graphy.end()){
             wyvesti_vector(*it);
+            cout << '\n';
             it++;
         }
+       // //cout<< '\n' << kolvo_variantov << "dsfghjkl";
+      // //cout<< iseq({{0,1,1,1}, {1,0,0,0}, {1,0,0,0}, {1,0,0,0}},{{0,0,0,1},{0,0,0,1}, {0,0,0,1}, {1,1,1,0}});
 }
