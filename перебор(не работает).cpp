@@ -293,14 +293,15 @@ vector<vector<int>> vse_parosoch;
 }
 set<vector<vector<int>>> vse_graphy;
 void dfs2 (int v, vector<vector<int>>& graph, vector<bool>& used){
+
     used[v] = true;
-    for(int g: graph[v]){
-        if(used[g]) continue;
-        dfs2(g,graph,used);
+    for(int i = 0; i < graph.size();++i){
+        if(graph[v][i]!=0&&!used[i]) dfs2(i,graph,used);
     }
 }
 bool issv (vector<vector<int>>& graph){
-    vector<bool>used(graph.size(),false);
+    int n = graph.size();
+    vector<bool>used(n,false);
     dfs2(0,graph,used);
     for(int i = 0; i < graph.size();++i){
         if(!used[i]) return false;
@@ -313,16 +314,29 @@ void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector
         j=0;
     }
     if(i==kol_vo_ver-1 && j == i-1){
+
         if(kol_vo_reb-chislo_reber_postr > ogr_na_kr) {return;}
         else{
             now[i][j] = kol_vo_reb-chislo_reber_postr;
             now[j][i] = kol_vo_reb-chislo_reber_postr;
             chislo_reber_postr = kol_vo_reb;
         }
+        if(!issv(now)) {return;}
+
+        auto it = vse_graphy.begin();
+
+        while(it!=vse_graphy.end()){
+            vector<vector<int>> tmp = *it;
+            if(iseq(now,*it)) return;
+            it++;
+        }
+        vse_graphy.insert(now);
     }
     else if(i==kol_vo_ver){
         if(!issv(now)) {return;}
-        set<vector<vector<int>>> :: iterator it = vse_graphy.begin();
+
+        auto it = vse_graphy.begin();
+
         while(it!=vse_graphy.end()){
             if(iseq(now,*it)) return;
             it++;
