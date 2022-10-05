@@ -1,10 +1,22 @@
 #include <bits/stdc++.h>
-#include<windows.h>
-HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 #define int short
 using namespace std;
 int N;
-
+bool truetrue = true;
+bool falsefalse = false;
+vector<unsigned long long> stepeni_piaterki (21);
+void fill_st_p(){
+stepeni_piaterki[0] = 1;
+for(int i = 1; i < 21; ++i){
+stepeni_piaterki[i] = 5*stepeni_piaterki[i-1];
+}
+}
+inline unsigned long long upd_chislo (int i, int delta, unsigned long long& chislo){
+chislo+=delta*stepeni_piaterki[i];
+}
+inline int get_summ (int& i, unsigned long long& chislo){
+return (chislo/stepeni_piaterki[i])%5;
+}
 template<typename T> void vyvesti_vector(vector<T> a){
     for(int i = 0; i < a.size(); ++i){
         cout<< a[i] << " ";
@@ -13,68 +25,62 @@ template<typename T> void vyvesti_vector(vector<T> a){
     cout<< '\n';
     //fout << "\n";
 }
-template<typename T> void wyvesti_vector(vector<T> a, bool zeleniy){
-    cout << '\n';
-    if(zeleniy) SetConsoleTextAttribute(h, (((15 << 4) | 2)));
+template<typename T> void wyvesti_vector(vector<T> a){
     for(int i = 0; i < a.size(); ++i){
         vyvesti_vector(a[i]);
     }
-    SetConsoleTextAttribute(h, (((15 << 4) | 0)));
-    cout << '\n';
 }
-vector<int> indexa; vector<int> indexb; vector<vector<int>> otvetcase_1d;
-void fill_indexes (){
-    indexa.resize(N);
-    indexb.resize(N);
-    otvetcase_1d.resize(N);
+vector<int> indexa(1);
+vector<int> indexb(1);
+vector<vector<int>> otvet1;
+void fill_indexes(){
+    indexa.resize(N,0);
+    indexb.resize(N,0);
+    otvet1.resize(N);
+    for(int i = 0; i < N; ++i){
+        otvet1[i].erase(otvet1[i].begin(),otvet1[i].end());
+    }
     for(int i = 0; i < N; ++i){
         indexa[i] = i;
-    }
-    for(int i = 0; i < N; ++i){
         indexb[i] = i;
     }
-
 }
- inline  vector<vector<int>> case_1d (vector<int>& a,vector<int>& b){
-    if(a.size()!=b.size()) return {{-3}};
+ inline  vector<vector<int>> case_1d (vector<int>& a,vector<int>& b, bool& sorted){
+
+    if(a.size()!=b.size()) return {{-5}};
     int summa1 = 0, summa2 = 0;
     for(int i = 0; i < a.size(); ++i){
         summa1+=a[i]; summa2+=b[i];
     }
-    if(summa1!=summa2) return {{-2}};
+    if(summa1!=summa2) return {{-5}};
+    fill_indexes();
+    if(!sorted) sort(indexa.begin(),indexa.end(),[&](int x, int y){return(a[x]<a[y]);});
 
-
-    sort(indexa.begin(),indexa.end(),[&](int x, int y){return(a[x]<a[y]);});
-
-
-    sort(indexb.begin(),indexb.end(),[&](int x, int y){return(b[x]<b[y]);});
+     if(!sorted) sort(indexb.begin(),indexb.end(),[&](int x, int y){return(b[x]<b[y]);});
 
     for(int i = 0; i < a.size(); ++i){
         if(a[indexa[i]]!=b[indexb[i]]) {
-            return {{-1}};
+            return {{-5}};
         }
     }
 
     int koren_proizvodnoi = 0;
-    for(int i = 0; i < N; ++i){
-        otvetcase_1d[i].erase(otvetcase_1d[i].begin(), otvetcase_1d[i].end());
-    }
-    otvetcase_1d[indexa[0]].push_back(indexb[0]);
+
+    otvet1[indexa[0]].push_back(indexb[0]);
     for(int i = 1; i < a.size(); ++i){
         if(a[indexa[i]] > a[indexa[koren_proizvodnoi]]){
             koren_proizvodnoi = i;
-            otvetcase_1d[indexa[i]].push_back(indexb[i]);
+            otvet1[indexa[i]].push_back(indexb[i]);
         }
         else {
-            for(auto tmp : otvetcase_1d[indexa[koren_proizvodnoi]]) otvetcase_1d[indexa[i]].push_back(tmp);
-            otvetcase_1d[indexa[i]].push_back(indexb[i]);
+            for(auto tmp : otvet1[indexa[koren_proizvodnoi]]) otvet1[indexa[i]].push_back(tmp);
+            otvet1[indexa[i]].push_back(indexb[i]);
             for(int j = koren_proizvodnoi; j < i; ++j){
-                otvetcase_1d[indexa[j]].push_back(indexb[i]);
+                otvet1[indexa[j]].push_back(indexb[i]);
             }
         }
     }
-   // wyvesti_vector(otvetcase_1d);
-    return otvetcase_1d;
+    return otvet1;
 }
 const int ogranichenie_na_stepen = 4;
   inline vector<vector<int>> genocid_nulej (vector<vector<int>>& a){
@@ -102,9 +108,9 @@ const int ogranichenie_na_stepen = 4;
     }
     return otvet;
 }
-inline   vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>>& u, vector<vector<int>>& v, vector<int>& suma, vector<int>&sumb){
-
-    /*vector<vector<int>> a = genocid_nulej(u);
+inline   vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>>& u, vector<vector<int>>& v, vector<int>& suma, vector<int>& sumb){
+    /*vector<vector<int>> otvet (u.size(), vector<int>(1,0));
+    vector<vector<int>> a = genocid_nulej(u);
     vector<vector<int>> b = genocid_nulej(v);
     if(a.size()!=b.size()) return {{-6}};
     vector<int> suma(a.size(),0);
@@ -118,12 +124,16 @@ inline   vector<vector<int>> otseivanie_teoremoj_vieta (vector<vector<int>>& u, 
         for(int j = 0; j < a[0].size();++j){
             sumb[i] += b[i][j];
         }
-    }*/
+    }
     vector<vector<int>> sravnenie_summ = case_1d(suma,sumb);
     if(sravnenie_summ[0][0] < 0) return {{-5}};
+    for(int i = 0; i < otvet.size(); ++i){
+        otvet[i] = sravnenie_summ[i];
+    }
 
+    return otvet;*/
 
-    return sravnenie_summ;
+    return case_1d(suma,sumb,falsefalse);
 }
 //rebra v formate vectora iz 3 chisel: ver1, ver2, ves
   inline vector<vector<int>> rebra_v_tablicu (int kol_vo_ver, vector<vector<int>>& rebra){
@@ -161,18 +171,17 @@ vector<bool>used(ogranichenie_na_kolvo_vershin);
     }
     return false;
 }
-
     vector<int> max_parosochetanie (vector<vector<int>>& g, int n){
-    match.resize(N,-1);
     for(int v = 0;  v < n; ++v){
         fill(used.begin(),used.end(),false);
         bool t = dfs(g,v);
     }
-
+    vector<int> ans;
     for(int i = 0; i < n; ++i){
         if(match[i]==-1) return {-1};
+        ans.push_back(match[i]);
     }
-    return match;
+    return ans;
 }
 vector<vector<int>> vse_parosoch;
   inline void all_parosoch (vector<vector<int>>& rebra, vector<int>& ans, vector<int>& usedb, int k){
@@ -194,9 +203,12 @@ vector<vector<int>> vse_parosoch;
             return;
 
 }
+vector<vector<int>> c;
  inline bool iseq (vector<vector<int>>& a, vector<vector<int>>& b, vector<int>& suma, vector<int>& sumb){
     int n = a.size();
-    vector<vector<int>> c = otseivanie_teoremoj_vieta(a,b,suma,sumb);
+    //vector<vector<int>> c = otseivanie_teoremoj_vieta(a,b,suma,sumb);
+
+    c = case_1d(suma,sumb,truetrue);
     switch(c[0][0]){
     case -6:
         ////cout<< "Code -6: sizes are not equal";
@@ -261,8 +273,11 @@ inline bool issv (vector<vector<int>>& graph){
 }
 
 
-
-inline void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector<int>>& now, int i, int j, int chislo_reber_postr, vector<int>& summa_strok){
+vector<int> summa_strok2;
+void fill_sum_str(){
+    summa_strok2.resize(N,0);
+}
+inline void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector<vector<int>>& now, int i, int j, int chislo_reber_postr, unsigned long long chislo){
     if(i==0) return;
     //cout<< "sdfgh" << '\n';
     //wyvesti_vector(now);
@@ -279,68 +294,61 @@ inline void postroenie (int& kol_vo_reb, int& kol_vo_ver, int& ogr_na_kr, vector
         else{
             now[i][j] = kol_vo_reb-chislo_reber_postr;
             now[j][i] = kol_vo_reb-chislo_reber_postr;
+            chislo+=(kol_vo_reb-chislo_reber_postr)*stepeni_piaterki[i];
+            chislo+=(kol_vo_reb-chislo_reber_postr)*stepeni_piaterki[j];
             chislo_reber_postr = kol_vo_reb;
-            summa_strok[i] += now[i][j];
-            summa_strok[j] += now[j][i];
             int sum_v_str = 0, sum_v_stl = 0;
             for(int p = 0; p < kol_vo_ver; ++p){
                 sum_v_str+=now[i][p];
             }
-            if(sum_v_str > ogranichenie_na_stepen) {summa_strok[i] -= now[i][j]; summa_strok[j] -= now[j][i];return;}
+            if(sum_v_str > ogranichenie_na_stepen) return;
             for(int p = 0; p < kol_vo_ver; ++p){
                 sum_v_stl+=now[p][j];
             }
-            if(sum_v_stl > ogranichenie_na_stepen) {summa_strok[i] -= now[i][j]; summa_strok[j] -= now[j][i];return;}
+            if(sum_v_stl > ogranichenie_na_stepen) return;
         }
         if(!issv(now)) {////cout<< "osibka" << '\n'; //wyvesti_vector(now); //cout<< '\n' << "kones osibki";
-        summa_strok[1]-=now[1][0]; summa_strok[0] -= now[0][1];
         return;}
         ////cout<< '\n';
         ////wyvesti_vector(now);
         ////cout<< '\n';
-        for(int i = 0; i < vse_graphy.size();++i){
-            if(iseq(now,vse_graphy[i],summa_strok,vse_summy[i])) {summa_strok[1]-=now[1][0]; summa_strok[0] -= now[0][1];return;}
-        }
-        /*for(int i = 0; i < N; ++i){
-        int t = 0;
-        for(int j = 0; j < N; ++j){
-            t+=now[i][j];
-        }
-        if(t!=summa_strok[i]) {wyvesti_vector(now,true); vyvesti_vector(summa_strok);}
+        /*vector<int> summa_strok(N,0);
+        for(int i =0 ; i < N; ++i){
+            for(int j = 0; j < N; ++j){
+                summa_strok[i]+=now[i][j];
+            }
         }*/
-        vse_graphy.push_back(now);
-        vse_summy.push_back(summa_strok);
 
+        for(int i =0; i < N; ++i){
+            summa_strok2[i] = get_summ(i,chislo);
+        }
+        sort(summa_strok2.begin(),summa_strok2.end());
+
+        vse_graphy.push_back(now);
+        vse_summy.push_back(summa_strok2);
     }
     else {
         for(int t = 0; t <= ogr_na_kr; ++t){
             ////cout<< "!" << t << "!";
-            if(summa_strok[i]+t > ogranichenie_na_stepen || chislo_reber_postr+t > kol_vo_reb) {//cout<< "!001!"; //cout<< '\n'; //wyvesti_vector(now);
+
+            if(get_summ(i,chislo)+t > ogranichenie_na_stepen  || chislo_reber_postr+t > kol_vo_reb) {//cout<< "!001!"; //cout<< '\n'; //wyvesti_vector(now);
             break;}
-            
             //if(j==i-1 && t == 0 && sum_v_str == 0) continue;
-            if(j == i-1 && t == 0 && summa_strok[i] == 0) {continue;}
+            if(j == i-1 && t == 0 && get_summ(i,chislo) == 0) {continue;}
             now[i][j] = t;
             now[j][i] = t;
+            chislo+=t*stepeni_piaterki[i];
+            chislo+=t*stepeni_piaterki[j];
             chislo_reber_postr+=t;
             j++;
-            summa_strok[i]+=t;
-            summa_strok[j]+=t;
-            for(int i = 0; i < N; ++i){
-        int t = 0;
-        for(int j = 0; j < N; ++j){
-            t+=now[i][j];
-        }
-        if(t!=summa_strok[i]) {wyvesti_vector(now,true); vyvesti_vector(summa_strok);}
-        }
             ////wyvesti_vector(now);
-            postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,i,j,chislo_reber_postr,summa_strok);
+            postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,i,j,chislo_reber_postr,chislo);
             ////cout<< "@";
             now[i][j] = 0;
             now[j][i] = 0;
             chislo_reber_postr-=t;
-            summa_strok[i]-=t;
-            summa_strok[j]-=t;
+            chislo-=t*stepeni_piaterki[i];
+            chislo-=t*stepeni_piaterki[j];
             j--;
         }
     }
@@ -354,32 +362,54 @@ void vyvesti_rebra_tablicy (vector<vector<int>>& tablica){
 }
 signed main()
 {
-    system("color F0");
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
+    fill_st_p();
+
     int kol_vo_reb,kol_vo_ver,ogr_na_kr;
     cin >> kol_vo_reb >> kol_vo_ver >> ogr_na_kr;
+    N = kol_vo_ver;
+    fill_sum_str();
+
     auto timee = clock();
     int nol = 0;
-    N = kol_vo_ver;
-    fill_indexes();
     vector<vector<int>> now(kol_vo_ver,vector<int>(kol_vo_ver,0));
-    vector<int> summa_strok (kol_vo_ver,0);
+     vector<int> summa_strok2(N,0);
+     unsigned long long chislo = 0;
     if(kol_vo_reb == kol_vo_ver-1){
         now[kol_vo_ver-1][0] = 1;
         now[0][kol_vo_ver-1] = 1;
+        now[kol_vo_ver-2][0] = 1;
+        now[0][kol_vo_ver-2] = 1;
 
-        summa_strok[0] = 1;
-        summa_strok[kol_vo_ver-1] = 1;
-        postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,kol_vo_ver-2,0,nol+1,summa_strok);
+
+        chislo+=2*stepeni_piaterki[0];
+        chislo+=stepeni_piaterki[N-1];
+        chislo+=stepeni_piaterki[N-2];
+
+        postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,kol_vo_ver-3,0,nol+2,chislo);
+        for(int i = 0; i < N; ++i){
+            summa_strok2[i] = 0;
+            for(int j =0; j < N; ++j){
+                now[i][j] = 0;
+            }
+        }
+        chislo = 0;
+
+        now[kol_vo_ver-1][0] = 1;
+        now[0][kol_vo_ver-1] = 1;
+        now[kol_vo_ver-2][1] = 1;
+        now[1][kol_vo_ver-2] = 1;
+        chislo+=stepeni_piaterki[0] + stepeni_piaterki[1] + stepeni_piaterki[N-1] + stepeni_piaterki[N-2];
+        postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,kol_vo_ver-3,0,nol+2,chislo);
     }
-    else postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,kol_vo_ver-1,0,nol,summa_strok);
-    cout  << vse_graphy.size() << endl;
+    else postroenie(kol_vo_reb,kol_vo_ver,ogr_na_kr,now,kol_vo_ver-1,0,nol,chislo);
+    cout << vse_graphy.size() << endl;
     //fout<< vse_graphy.size() << endl;
 
     for(int i = 0; i < vse_graphy.size();++i){
-        wyvesti_vector(vse_graphy[i],false);
+        wyvesti_vector(vse_graphy[i]);
         cout << '\n';
     }
     cout << "Execution time: " << clock()-timee << "ms";
