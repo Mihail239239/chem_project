@@ -1,0 +1,500 @@
+#include <bits/stdc++.h>
+#include <vector>
+
+using namespace std;
+
+#define int long long
+
+struct ION
+{
+ string name;
+ int zarad;
+};
+
+int NOD(int a, int b)
+{
+    int nod;
+    for(int i=min(abs(a),abs(b)); i>0;--i)
+    {
+        if(a%i==0 && b%i==0)
+        {
+            nod=i;
+            break;
+        }
+    }
+    return nod;
+}
+
+int NOK(int a, int b)
+{
+    return a*b/NOD(a,b);
+}
+
+double KOLVO_IONA(string x, int t) //Рассчитывает количество иона
+{
+    double kolvo=1;
+    int kolvo_skobok;
+    string bufer="";
+    for(int i=0; i<t; ++i)
+    {
+        if(x[i]=='(')
+        {
+            kolvo_skobok++;
+        }
+        if(x[i]==')')
+        {
+            kolvo_skobok--;
+        }
+    }
+    for(int i=1; x[t+i]>='0' && x[t+i]<='9'; ++i)
+    {
+        bufer.push_back(x[t+i]);
+    }
+    if(bufer!="")
+    {
+        kolvo*=stod(bufer);
+        bufer="";
+    }
+    for(t; t<x.size(); ++t)
+    {
+        if(kolvo_skobok==0)
+        {
+            break;
+        }
+        if(x[t]=='(')
+        {
+            ++kolvo_skobok;
+        }
+        if(x[t]==')')
+        {
+            if(kolvo_skobok>0)
+            {
+                ++t;
+                for(; x[t]>='0' && x[t]<='9'; ++t)
+                {
+                    bufer.push_back(x[t]);
+                }
+                if(bufer!="")
+                {
+                    kolvo*=stod(bufer);
+                    bufer="";
+                }
+            }
+            kolvo_skobok--;
+        }
+    }
+    return kolvo;
+}
+
+vector <vector <pair <pair<string, int>, double> > > rasloshenie(string x)
+{
+    int sum_zarad;
+    int kolvo_skobok_1=0;
+    int kolvo_skobok_2=0;
+    int flag2;
+    int n_1=41;
+    int n_2=14;
+    int kolvo_variantov;
+    int dlinadis;
+    int kolvo_elementa_dis;
+    double k_a;
+    char rastvorim1;
+    char rastvorim2;
+    char rastvorim3;
+    char rastvorim4;
+    string z2;
+    string y="";
+    string rastvorim_str;
+    string ion1;
+    string anion1;
+    string proverka="";
+    string itog="";
+    string bufer="";
+    vector <string> veshestvo(0);
+    vector <vector <pair <pair<string, int>, double> > > dis(1);
+    vector <int> variant(n_1);
+    for(int i=0; i<n_1; ++i)
+    {
+        variant[i]=i;
+    }
+    char z;
+    int dlinakation1;
+    int dlinaanion1;
+    int zaradkation1;
+    int zaradanion1;
+    int d1, d2, d3, d4, d5, d6, c5, c6, an_1, an_2;
+    int a=0;
+    int kat_1, kat_2, dlina_1, b1,b2,b3,b4;
+
+    ION ion[n_1];
+    ion[0].name="H";
+    ion[0].zarad=1;
+
+    ion[1].name="Li";
+    ion[1].zarad=1;
+
+    ion[2].name="K";
+    ion[2].zarad=1;
+
+    ion[3].name="Na";
+    ion[3].zarad=1;
+
+    ion[4].name="NH4";
+    ion[4].zarad=1;
+
+    ion[5].name="Ba";
+    ion[5].zarad=2;
+
+    ion[6].name="Ca";
+    ion[6].zarad=2;
+
+    ion[7].name="Mg";
+    ion[7].zarad=2;
+
+    ion[8].name="Sr";
+    ion[8].zarad=2;
+
+    ion[9].name="Al";
+    ion[9].zarad=3;
+
+    ion[10].name="Cr";
+    ion[10].zarad=3;
+
+    ion[11].name="Fe";
+    ion[11].zarad=2;
+
+    ion[12].name="Fe";
+    ion[12].zarad=3;
+
+    ion[13].name="Ni";
+    ion[13].zarad=2;
+
+    ion[14].name="Co";
+    ion[14].zarad=2;
+
+    ion[15].name="Mn";
+    ion[15].zarad=2;
+
+    ion[16].name="Zn";
+    ion[16].zarad=2;
+
+    ion[17].name="Ag";
+    ion[17].zarad=1;
+
+    ion[18].name="Hg";
+    ion[18].zarad=2;
+
+    ion[19].name="Pb";
+    ion[19].zarad=2;
+
+    ion[20].name="Sn";
+    ion[20].zarad=2;
+
+    ion[21].name="Cu";
+    ion[21].zarad=2;
+
+    ion[22].name="Cu";
+    ion[22].zarad=1;
+
+    ion[23].name="OH";
+    ion[23].zarad=-1;
+
+    ion[24].name="F";
+    ion[24].zarad=-1;
+
+    ion[25].name="Cl";
+    ion[25].zarad=-1;
+
+    ion[26].name="Br";
+    ion[26].zarad=-1;
+
+    ion[27].name="I";
+    ion[27].zarad=-1;
+
+    ion[28].name="S";
+    ion[28].zarad=-2;
+
+    ion[29].name="SO3";
+    ion[29].zarad=-2;
+
+    ion[30].name="SO4";
+    ion[30].zarad=-2;
+
+    ion[31].name="NO3";
+    ion[31].zarad=-1;
+
+    ion[32].name="NO2";
+    ion[32].zarad=-1;
+
+    ion[33].name="PO4";
+    ion[33].zarad=-3;
+
+    ion[34].name="MnO4";
+    ion[34].zarad=-1;
+
+    ion[35].name="MnO4";
+    ion[35].zarad=-2;
+
+    ion[36].name="ClO";
+    ion[36].zarad=-1;
+
+    ion[37].name="ClO2";
+    ion[37].zarad=-1;
+
+    ion[38].name="ClO3";
+    ion[38].zarad=-1;
+
+    ion[39].name="ClO4";
+    ion[39].zarad=-1;
+
+    ion[40].name="SeO4";
+    ion[40].zarad=-2;
+
+    x.push_back('!'); // Добавление в конец символа, символизирующего в конец (упрощает код)
+    for(int t=0; t<x.size(); ++t) // Отвечает за разложение
+    {
+        if(x[t]=='(' && y=="")
+        {
+            ++kolvo_skobok_1;
+        }
+        else
+        {
+            if(x[t]==')' && y=="")
+            {
+                --kolvo_skobok_1;
+            }
+            else
+            {
+                if((y!="" || x[t]<'0') || x[t]>'9')
+                {
+                y.push_back(x[t]);
+                if(t<x.size()-1 && (x[t+1]>='a' && x[t+1]<='z')) // Отвечает за то, чтобы элемент добавлялся целиком
+                {
+                    ++t;
+                    y.push_back(x[t]);
+                }
+                kolvo_variantov=variant.size();
+                for(int i=0; i<kolvo_variantov; ++i) // Ищет подходящие ионы
+                {
+                    while(y.size()>ion[variant[i]].name.size())
+                    {
+                        ++i;
+                        if(i>=kolvo_variantov)
+                        {
+                            break;
+                        }
+                    }
+                    if(i<kolvo_variantov) //Проверяет не вылез ли алгоритм за пределы вектора
+                    {
+                        ion1=ion[variant[i]].name;
+                        ion1.resize(y.size()); // Сохранение части проверяемого ионы
+                        if(y==ion1) // Проверка, кодходит ли этот ион
+                        {
+                            variant.push_back(variant[i]); //Если подходит добавляем информацию про него
+                        }
+                    }
+                    else //Если вылезли,
+                    {
+                        break; // Выход из цикла
+                    }
+                }
+                kolvo_variantov=variant.size()-kolvo_variantov; //Посчитали количесство добавившихся вариантов
+                if(kolvo_variantov!=0) //Если варианты ещё есть
+                {
+                    kolvo_variantov=variant.size()-kolvo_variantov;
+                    variant.erase(variant.begin(), variant.begin() + kolvo_variantov); // Удаление устаревшей информации
+                }
+                else
+                {
+                    if(variant.size()==0)
+                    {
+                        cout << "ERROR!";
+                    }
+
+                    if(variant.size()==1) //Если ион определён однозначно
+                    {
+                        //cout << y << t << '\n';
+                        if(y[y.size()-1]>='a' && y[y.size()]<='z') // Возможно, мы добавили 2 символа сразу
+                        {
+                            --t;
+                            y.pop_back();
+                        }
+                        --t; // Возвращение на 1 элемент назад, тк перескочили
+                        y.pop_back();
+                        if(y!=ion[variant[0]].name)
+                        {
+                            cout << "ERROR";
+                        }
+                        for(int i=0; i<dis.size();++i)
+                        {
+                            dis[i].push_back(make_pair(make_pair(ion[variant[0]].name, ion[variant[0]].zarad),KOLVO_IONA(x, t))); //Добавь в вектор данные про него
+                        }
+                        y=""; //Обнуления для поиска нового элемента.
+                        variant.erase(variant.begin(), variant.end());
+                        for(int i=0; i<n_1; ++i)
+                        {
+                            variant.push_back(i);
+                        }
+                    }
+                    if(variant.size()==2)
+                    {
+                        if(y[y.size()-1]>='a' && y[y.size()]<='z') // Возможно, мы добавили 2 символа сразу
+                        {
+                            --t;
+                            y.pop_back();
+                        }
+                        --t; // Возвращение на 1 элемент назад, тк перескочили
+                        y.pop_back();
+                        if(ion[variant[0]].name==y)
+                        {
+                            if(ion[variant[1]].name==y)
+                            {
+                                //cout << "!" << variant[0] << variant[1] << " ";
+                                dlinadis=dis.size();
+                                dis[0].push_back(make_pair(make_pair(ion[variant[0]].name, ion[variant[0]].zarad),KOLVO_IONA(x, t))); //Добавь в вектор данные про него
+                                kolvo_elementa_dis=dis[0][dis[0].size()-1].second;
+                                dis.push_back(dis[0]);
+                                dis[dlinadis][dis[dlinadis].size()-1].first.second=ion[variant[1]].zarad;
+                                for(int j=1; j<dlinadis; ++j)
+                                {
+                                    dis[j].push_back(make_pair(make_pair(ion[variant[0]].name, ion[variant[0]].zarad),kolvo_elementa_dis));
+                                    dis.push_back(dis[j]);
+                                    dis[dlinadis+j][dis[dlinadis].size()-1].first.second=ion[variant[1]].zarad;
+                                }
+                                y=""; //Обнуления для поиска нового элемента.
+                                variant.erase(variant.begin(), variant.end());
+                                for(int i=0; i<n_1; ++i)
+                                {
+                                    variant.push_back(i);
+                                }
+                            }
+                            else
+                            {
+                                dis[0].push_back(make_pair(make_pair(ion[variant[0]].name, ion[variant[0]].zarad),KOLVO_IONA(x, t))); //Добавь в вектор данные про него
+                                for(int j=1; j<dis.size(); ++j)
+                                {
+                                    dis[j].push_back(dis[0][dis[0].size()-1]);
+                                }
+                                y=""; //Обнуления для поиска нового элемента.
+                                variant.erase(variant.begin(), variant.end());
+                                for(int i=0; i<n_1; ++i)
+                                {
+                                    variant.push_back(i);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if(ion[variant[1]].name==y)
+                            {
+                                variant[0]=variant[1];
+                                dis[0].push_back(make_pair(make_pair(ion[variant[1]].name, ion[variant[1]].zarad),KOLVO_IONA(x,t))); //Добавь в вектор данные про него
+                                for(int j=1; j<dis.size(); ++j)
+                                {
+                                    dis[j].push_back(dis[0][dis[0].size()-1]);
+                                }
+                                y=""; //Обнуления для поиска нового элемента.
+                                variant.erase(variant.begin(), variant.end());
+                                for(int i=0; i<n_1; ++i)
+                                {
+                                    variant.push_back(i);
+                                }
+                            }
+                            else
+                            {
+                                cout << "ERROR";
+                            }
+                        }
+                    }
+                    if(variant.size()>=3 && y!="" && y!="!")
+                    {
+                        if(y[y.size()-1]>='a' && y[y.size()]<='z') // Возможно, мы добавили 2 символа сразу
+                        {
+                            --t;
+                            y.pop_back();
+                        }
+                        --t; // Возвращение на 1 элемент назад, тк перескочили
+                        y.pop_back();
+                        for(int j1=0; j1<variant.size(); ++j1)
+                        {
+                            if(ion[variant[j1]].name==y)
+                            {
+                                dis[0].push_back(make_pair(make_pair(ion[variant[j1]].name, ion[variant[j1]].zarad),KOLVO_IONA(x,t))); //Добавь в вектор данные про него
+                                for(int j=1; j<dis.size(); ++j)
+                                {
+                                    dis[j].push_back(dis[0][dis[0].size()-1]);
+                                }
+                                y=""; //Обнуления для поиска нового элемента.
+                                variant.erase(variant.begin(), variant.end());
+                                for(int i=0; i<n_1; ++i)
+                                {
+                                    variant.push_back(i);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                }
+            }
+        }
+    }
+    sum_zarad=1;
+    while(sum_zarad!=0)
+    {
+        sum_zarad=0;
+        for(int i=0; i<dis[0].size(); ++i)
+        {
+            //cout << dis[0][i].second << dis[0][i].first.first << dis[0][i].first.second << " ";
+            sum_zarad+=dis[0][i].second*dis[0][i].first.second;
+        }
+        if(sum_zarad!=0)
+        {
+            dis.erase(dis.begin());
+        }
+        if(dis.size()==0)
+        {
+            cout << "ZARAD ERROR";
+            break;
+        }
+    }
+
+    return dis;
+}
+
+
+
+signed main()
+{
+    string x="";
+    cin >> x;
+    vector <vector <pair <pair<string, int>, double> > > dis(0);
+    dis=rasloshenie(x);
+    if(dis.size()>0)
+    {
+        for(int i=0; i<dis[0].size(); ++i) //Вывод данных
+        {
+            if(dis[0][i].second!=1)
+            {
+                cout << dis[0][i].second;
+            }
+            cout << dis[0][i].first.first<< "^(";
+            if(dis[0][i].first.second>0)
+            {
+                cout  << dis[0][i].first.second << "+" << ")";
+            }
+            else
+            {
+                cout << abs(dis[0][i].first.second) << "-" << ")";
+            }
+            if(i<dis[0].size()-1)
+            {
+                cout  << " + ";
+            }
+        }
+    }
+    else
+    {
+        cout << "OI";
+    }
+}
