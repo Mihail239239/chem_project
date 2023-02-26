@@ -4,16 +4,16 @@
 using namespace std;
 
 
+#define int long long
+#define isupper bolshie_bukvy
+#define islower malenkie_bukvy
+#define isdigit tcifra
+
 struct ION
 {
  string name;
  int zarad;
 };
-
-#define int long long
-#define isupper bolshie_bukvy
-#define islower malenkie_bukvy
-#define isdigit tcifra
 
 template <typename T>
 pair<vector <T>, vector<T>> rasdelenie_na_dva(vector<T> A, int dlina1)
