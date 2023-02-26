@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <vector>
 
 using namespace std;
 
@@ -13,6 +12,7 @@ struct ION
 {
  string name;
  int zarad;
+ int koordinat=0;
 };
 
 template <typename T>
@@ -124,7 +124,7 @@ vector <T> operator * (vector <T> b, T a)
 }
 
 
-int NOD(int a, int b)
+signed NOD(int a, int b)
 {
     if(a<0) a=-a;
     if(b<0) b=-b;
@@ -142,7 +142,7 @@ int NOD(int a, int b)
 
 
 
-int NOK(int a, int b)
+signed NOK(int a, int b)
 {
     return abs(a*b)/NOD(a,b);
 }
@@ -829,7 +829,7 @@ vector <RACIONAL> reshenie_sistemy_nul(MATRITCA_CLASS<RACIONAL> A)
                 reshenie_naoborot.push_back(RACIONAL(1));
                 if(a[i][a[0].size()-3]!=0) // Может вылезать, но редко (когда 2 вещества)
                 {
-                    cout << a[i][a[0].size()-3] << a[i][a[0].size()-2] << a[i][a[0].size()-1] ;//C7H14+KMnO4+H2SO4=CH3COCH3+CH3CH2COCH3+MnSO4+H2O+K2SO4
+                   cout << a[i][a[0].size()-3] << a[i][a[0].size()-2] << a[i][a[0].size()-1] ;//C7H14+KMnO4+H2SO4=CH3COCH3+CH3CH2COCH3+MnSO4+H2O+K2SO4
                     return {RACIONAL(-2)};
                 }
             }
@@ -869,7 +869,7 @@ vector <RACIONAL> reshenie_sistemy_nul(MATRITCA_CLASS<RACIONAL> A)
     return reshenie;
 }
 
-int kolvo_elementa_funktcia(string veshestvo, int nomer_element)
+signed kolvo_elementa_funktcia(string veshestvo, int nomer_element)
 {
     int kolvo=1;
     string kolvo_elementa_string="";
@@ -1098,7 +1098,7 @@ double KOLVO_IONA(string x, int t) //Рассчитывает количеств
 
 
 
-int rastvorimost(int nomer_ion1, int nomer_ion2)
+signed rastvorimost(int nomer_ion1, int nomer_ion2)
 {
     int n=37;
     int tablichka[37][37]=
@@ -1157,7 +1157,7 @@ int rastvorimost(int nomer_ion1, int nomer_ion2)
 
 
 
-int opredelenie_iona(string nazvanie_iona, int zarad_iona)
+signed opredelenie_iona(string nazvanie_iona, int zarad_iona)
 {
     int i1=-1;
 
@@ -1793,12 +1793,12 @@ vector <pair<string, int>>  rasloshenie(string x) // возвращает раз
             if((rastvorimost(i2,i3)==2 && dis[0][i].second>0) && dis[0][t].second>0)
             {
                 bufer=sozdatel(i2,i3); // в буфере сохраняется вещество
-                if(dis[0][i].second/abs(dis[0][i].first.second)>=dis[0][t].second/abs(dis[0][t].first.second)); // Если в избытке катион
+                if(dis[0][i].second/abs(dis[0][i].first.second)>=dis[0][t].second/abs(dis[0][t].first.second)) // Если в избытке катион
                 {
                     dis[0][t].first.first=bufer; //кладём вещество на место аниона
                     dis[0][t].first.second=0; //заряд вещества 0
                     dis[0][t].second=dis[0][t].second/abs(dis[0][i].first.second)*NOD(dis[0][i].first.second,dis[0][t].first.second); //такого количество вещества
-                    dis[0][i].second=dis[0][i].second-dis[0][t].second/abs(dis[0][t].first.second)*NOD(dis[0][i].first.second,dis[0][t].first.second); //уменьшаем количество катиона
+                    dis[0][i].second-=dis[0][t].second/abs(dis[0][t].first.second)*NOD(dis[0][i].first.second,dis[0][t].first.second); //уменьшаем количество катиона
                 }
                 else
                 {
@@ -1830,9 +1830,9 @@ vector <pair<string, int>>  rasloshenie(string x) // возвращает раз
 
 
 
-vector <string, int> OVR(int nomer_ion1, int nomer_ion2, int kislotnost)
+vector <pair<string, int>> OVR(int nomer_ion1, int nomer_ion2, int kislotnost)
 {
-    vector <string, int> vosvrat;
+    vector <pair<string, int>> vosvrat;
     return vosvrat;
 }
 
@@ -1968,6 +1968,7 @@ signed main() //пишет реакцию
     vector <pair<string,int>> bufernoe_rasloshenie;
     vector <RACIONAL> zaradnoe_uravnenie;
     vector <RACIONAL> koefficienty;
+    vector <int> koefficienty_int;
     string bufer;
     string reaktcia="";
     int kislotnost=0; //<0 -- кислая, =0 -- нейтральная, >0 -- щелочная
@@ -1982,7 +1983,7 @@ signed main() //пишет реакцию
             {
                 if(bufernoe_rasloshenie[t1]==reagenty_ionnoe_rasloshenie[t2]) //если совпало, то не будем добавлять
                 {
-                    flag=0;
+                    flag1=0;
                     break;
                 }
             }
@@ -1991,6 +1992,11 @@ signed main() //пишет реакцию
                 reagenty_ionnoe_rasloshenie.push_back(bufernoe_rasloshenie[t1]); //добавляем
             }
         }
+    }
+    int flag_uchastia[reagenty_ionnoe_rasloshenie.size()];
+    for(int i=0; i<reagenty_ionnoe_rasloshenie.size(); ++i)
+    {
+        flag_uchastia[i]=0;
     }
     for(int i=0; i<reagenty_ionnoe_rasloshenie.size(); ++i)//определяем ориентировочную кислотность реакционной смеси
     {
@@ -2003,7 +2009,7 @@ signed main() //пишет реакцию
             ++kislotnost;
         }
     }
-    for(int i=0; i<reagenty_ionnoe_rasloshenie.size(); ++i) //теперь можно и продукты определить
+    for(int i=0; i<reagenty_ionnoe_rasloshenie.size()-1; ++i) //теперь можно и продукты определить
     {
         for(int t=i+1; t<reagenty_ionnoe_rasloshenie.size(); ++t)
         {
@@ -2018,7 +2024,7 @@ signed main() //пишет реакцию
                     {
 
                     }
-                    if(ion[nomer_aniona].name=="OH" && reagenty_ionnoe_rasloshenie[t].first=="OH" && ion[nomer_kationa].coordinat!=0)
+                    if(ion[nomer_aniona].name=="OH" && reagenty_ionnoe_rasloshenie[t].first=="OH" && ion[nomer_kationa].koordinat!=0)
                     {
 
                     }
@@ -2036,7 +2042,7 @@ signed main() //пишет реакцию
                 int nomer_aniona;
                 if(reagenty_ionnoe_rasloshenie[i].second*reagenty_ionnoe_rasloshenie[t].second<0)
                 {
-                    if(ion[nomer_ioni]>0)
+                    if(ion[nomer_ioni].zarad>0)
                     {
                         nomer_kationa=nomer_ioni;
                         nomer_aniona=nomer_iont;
@@ -2047,7 +2053,13 @@ signed main() //пишет реакцию
                         nomer_aniona=nomer_ioni;
                     }
                     int napravitel=rastvorimost(nomer_ioni,nomer_iont);//показывает тип реакции
-                    if(napravitel==2) //при взаимодействии выпадает осадок или образуется вода
+                    if(napravitel!=0)
+                    {
+                        flag_uchastia[i]=1;
+                        flag_uchastia[t]=1;
+                        //cout << i << t << '\n';
+                    }
+                    if(napravitel==2 || napravitel==1) //при взаимодействии выпадает осадок или образуется вода
                     {
                         bufer=sozdatel(nomer_ioni, nomer_iont);
                         flag1=0;
@@ -2158,7 +2170,7 @@ signed main() //пишет реакцию
                         bufernoe_rasloshenie=OVR(nomer_aniona, nomer_kationa, kislotnost); //получаем продукты овр
                         for(int i1=0; i1<bufernoe_rasloshenie.size(); ++i1)
                         {
-                            bufer=bufernoe_rasloshenie[i1];
+                            bufer=bufernoe_rasloshenie[i1].first;
                             flag1=0;
                             for(int i1=0; i1<reagenty_ionnoe_rasloshenie.size();++i1)
                             {
@@ -2251,6 +2263,13 @@ signed main() //пишет реакцию
 
         }
     }
+    for(int i=0; i<reagenty_ionnoe_rasloshenie.size();++i)
+    {
+        if(flag_uchastia[i]==0)
+        {
+            produkty_ionnoe_rasloshenie.push_back(reagenty_ionnoe_rasloshenie[i]);
+        }
+    }
     reaktcia="";
     for(int i=0;  i<reagenty_ionnoe_rasloshenie.size(); ++i)
     {
@@ -2270,8 +2289,14 @@ signed main() //пишет реакцию
         if(i!=produkty_ionnoe_rasloshenie.size()-1) reaktcia=reaktcia+"+";
     }
     MATRITCA_CLASS <RACIONAL> sistema=reaktcia_v_uravnenie(reaktcia);
-    reaktcia_v_uravnenie.dobavlenie_stroki(zaradnoe_uravnenie);
+    sistema.dobavlenie_stroki(zaradnoe_uravnenie);
     koefficienty=reshenie_sistemy_nul(sistema);
+    for(int i=0; i<koefficienty.size();++i)
+    {
+        koefficienty_int.push_back(koefficienty[i].racvint());
+        //cout << koefficienty_int[i];
+    }
+    cout << reaktcia;
     return 0;
 }
 
