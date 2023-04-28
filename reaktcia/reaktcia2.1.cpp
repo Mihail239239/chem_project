@@ -2744,7 +2744,7 @@ signed main() //пишет реакцию
                         }
                         break;
                     default:
-
+                            cout << "ERRRRRRRRRRORRRRRRRRRRRR!!!!!!!!!!!! NE VOZMOSHNO!!!!!" ;
 
                             break;
                     }
